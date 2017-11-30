@@ -240,3 +240,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/element_backstage/element_backstage/docs
+/backstage/element/Models
