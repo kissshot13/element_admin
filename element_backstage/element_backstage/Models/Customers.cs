@@ -22,5 +22,6 @@ namespace element_backstage.Models
         public DateTime EidtTime { get; set; }
         public DateTime CreateTime { set; get; }
         public bool Del { get; set; }
+        
     }
 }
