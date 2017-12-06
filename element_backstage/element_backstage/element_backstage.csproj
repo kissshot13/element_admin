@@ -200,6 +200,7 @@
       <DependentUpon>201712061312252_initial1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Customers.cs" />
     <Compile Include="Models\elementDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
