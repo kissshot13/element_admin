@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
-
-namespace element_backstage.Models
+namespace Model
 {
-    public class Customers
+    public class Customer
     {
         [Key]
         public Guid ID { get; set; }
@@ -22,6 +22,5 @@ namespace element_backstage.Models
         public DateTime EidtTime { get; set; }
         public DateTime CreateTime { set; get; }
         public bool Del { get; set; }
-        
     }
 }

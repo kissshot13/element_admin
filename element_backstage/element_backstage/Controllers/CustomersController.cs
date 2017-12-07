@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using element_backstage.Models;
+using Model;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using MySql.Data.Entity;
@@ -13,21 +13,21 @@ using System.Web.Http.Description;
 
 namespace element_backstage.Controllers
 {
-    public class CustomersController : ApiController
+    public class CustomerController : ApiController
     {
-        private elementDB db = new elementDB();
+        private ELementDB db = new ELementDB();
 
-        //GET： api/Customers
-        public IQueryable<Customers> GetCustomers()
+        //GET： api/Customer
+        public IQueryable<Customer> GetCustomer()
         {
             return db.Customers;
         }
 
-        //GET:  api/Customers/5
-        [ResponseType(typeof(Customers))]
-        public async Task<IHttpActionResult> GetCustomers(Guid id)
+        //GET:  api/Customer/5
+        [ResponseType(typeof(Customer))]
+        public async Task<IHttpActionResult> GetCustomer(Guid id)
         {
-            Customers custoemrs = await db.Customers.FindAsync(id);
+            Customer custoemrs = await db.Customers.FindAsync(id);
             if (custoemrs == null)
             {
                 return NotFound();
@@ -35,19 +35,19 @@ namespace element_backstage.Controllers
             return Ok(custoemrs);
         }
 
-        //put: api/Customers/5
-        [ResponseType(typeof(Customers))]
-        public async Task<IHttpActionResult> PutCustomers(Guid id, Customers customers)
+        //put: api/Customer/5
+        [ResponseType(typeof(Customer))]
+        public async Task<IHttpActionResult> PutCustomer(Guid id, Customer Customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (id != customers.ID)
+            if (id != Customer.ID)
             {
                 return BadRequest();
             }
-            db.Entry(customers).State = EntityState.Modified;
+            db.Entry(Customer).State = EntityState.Modified;
 
             try
             {
@@ -68,22 +68,22 @@ namespace element_backstage.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
         
-        //post: api/Customers
-        [ResponseType(typeof(Customers))]
-        public  async Task<IHttpActionResult> PostCustomers(Customers customers)
+        //post: api/Customer
+        [ResponseType(typeof(Customer))]
+        public  async Task<IHttpActionResult> PostCustomer(Customer Customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            db.Customers.Add(customers);
+            db.Customers.Add(Customer);
             try
             {
                 await db.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (CustomerExits(customers.ID))
+                if (CustomerExits(Customer.ID))
                 {
                     return Conflict();
                 }
@@ -92,14 +92,14 @@ namespace element_backstage.Controllers
                     throw;
                 }
             }
-            return CreatedAtRoute("DefaultApi", new { id = customers.ID }, customers);
+            return CreatedAtRoute("DefaultApi", new { id = Customer.ID }, Customer);
         }        
         
-        // delete: api/customers/5
-        [ResponseType(typeof(Customers))]
-        public async  Task<IHttpActionResult> DeleteCustomers(Guid id)
+        // delete: api/Customer/5
+        [ResponseType(typeof(Customer))]
+        public async  Task<IHttpActionResult> DeleteCustomer(Guid id)
         {
-            Customers custoemrs = await db.Customers.FindAsync(id);
+            Customer custoemrs = await db.Customers.FindAsync(id);
             if (custoemrs == null)
             {
                 return NotFound();

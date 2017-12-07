@@ -1,9 +1,9 @@
-namespace element_backstage.Migrations
+namespace Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initial1 : DbMigration
+    public partial class initial : DbMigration
     {
         public override void Up()
         {
@@ -23,20 +23,23 @@ namespace element_backstage.Migrations
                     })
                 .PrimaryKey(t => t.ID);
             
-            DropTable("dbo.MyEntities");
+            CreateTable(
+                "dbo.Users",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        UserName = c.String(maxLength: 50, storeType: "nvarchar"),
+                        Password = c.String(maxLength: 100, storeType: "nvarchar"),
+                        CreateTime = c.DateTime(nullable: false, precision: 0),
+                        Del = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
         }
         
         public override void Down()
         {
-            CreateTable(
-                "dbo.MyEntities",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(unicode: false),
-                    })
-                .PrimaryKey(t => t.Id);
-            
+            DropTable("dbo.Users");
             DropTable("dbo.Customers");
         }
     }
