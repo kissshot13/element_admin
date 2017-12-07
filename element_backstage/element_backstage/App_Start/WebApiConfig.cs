@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Cors;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft;
-using System.Windows;
+using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Linq;
+using System.Web.SessionState;
+using System.Web.Http.WebHost;
+using System.Web.Routing;
+using System.Web;
 
 namespace element_backstage
 {
@@ -23,22 +24,24 @@ namespace element_backstage
             var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
             /********************************/
-
-            //清除所有的格式
-            //config.Formatters.Clear();
-            //所有的格式变成json
-            //config.Formatters.Add(new System.Net.Http.Formatting.JsonMediaTypeFormatter());
+            //config.Formatters.Remove(config.Formatters.FirstOrDefault(p => p.GetType() == typeof(System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter)));  
 
             //WebApi 返回小驼峰式 json 格式，并格式化日期
             ConfigureApi(config);
             // Web API 路由
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute(
+            //config.Routes.MapHttpRoute(
+            //    name: "DefaultApi",
+            //    routeTemplate: "api/{controller}/{id}",
+            //    defaults: new { id = RouteParameter.Optional }
+            //);
+
+            RouteTable.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
-            );
+             ).RouteHandler = new SessionControllerRouterHandler();
         }
 
         public static void ConfigureApi(HttpConfiguration config)
@@ -50,8 +53,8 @@ namespace element_backstage
             //这里使用自定义日期格式
             timeConverter.DateTimeFormat = "yyy'-'MM'-'dd' 'HH':'mm':'ss";
             setting.Converters.Add(timeConverter);
-
             setting.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            //替换原生的contentNegotiator
             config.Services.Replace(typeof(IContentNegotiator), new JsonCotentNegotiator(jsonFormatter));
             
         }
@@ -59,7 +62,7 @@ namespace element_backstage
 }
 
 /// <summary>
-/// 
+/// 创建一个替代原生contetnNegotiator的类，返回格式为json
 /// </summary>
 public class JsonCotentNegotiator: IContentNegotiator
 {
@@ -73,5 +76,22 @@ public class JsonCotentNegotiator: IContentNegotiator
     {
         var result = new ContentNegotiationResult(_jsonFormatter, new System.Net.Http.Headers.MediaTypeHeaderValue("applications/json"));
         return result;
+    }
+}
+
+
+public class SessionRouterHandler:HttpControllerHandler, IRequiresSessionState
+{
+    public SessionRouterHandler(RouteData routeData) : base(routeData)
+    {
+
+    }
+}
+
+public class SessionControllerRouterHandler : HttpControllerRouteHandler
+{
+    protected override IHttpHandler GetHttpHandler(RequestContext requestContext)
+    {
+        return new SessionRouterHandler(requestContext.RouteData);
     }
 }
