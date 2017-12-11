@@ -24,7 +24,7 @@
       <el-table-column prop="birth" label="生日" width="120" sortable></el-table-column>
       <el-table-column prop="addr" label="地址" width="180" sortable></el-table-column>
       <el-table-column label="操作" width="150">
-        <template scope="scope">
+        <template  scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scoep.$index, scope.row)">删除</el-button>
         </template>

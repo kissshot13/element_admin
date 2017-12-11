@@ -27,16 +27,21 @@ namespace element_backstage.Controllers
 
             if (!UserExits(login))
             {
-                return NotFound();
+                return Ok(new ResposeBase("用户不存在"));
             }
 
             FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(0, login.UserName, DateTime.Now, DateTime.Now.AddHours(1), true,string.Format("{0}&{1}",login.UserName,login.Password),FormsAuthentication.FormsCookiePath);
 
-            loginInfo info = new loginInfo
+            LoginResponseModel info = new LoginResponseModel
             {
-                Password = login.Password,
-                UserName = login.UserName,
-                Ticket = FormsAuthentication.Encrypt(ticket)
+               user = new User
+               {
+                   UserName = login.UserName,
+                   Password = "",
+               },
+               Success = true,
+               Ticket = FormsAuthentication.Encrypt(ticket)
+
             };
             HttpContext.Current.Session["private"] = info;
             
@@ -48,11 +53,4 @@ namespace element_backstage.Controllers
             return db.Users.Count(o => o.UserName == login.UserName && o.Password == login.Password && o.Del == false) > 0;
         }
     }
-}
-
-public class loginInfo
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    public string Ticket { get; set; }
 }

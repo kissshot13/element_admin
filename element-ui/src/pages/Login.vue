@@ -26,7 +26,7 @@
         logining: false,
         loginForm: {
           account: 'admin',
-          psw: '123456'
+          psw: 'admin'
         },
         rules2: {
           account: [{
@@ -52,12 +52,14 @@
               username: this.loginForm.account,
               password: this.loginForm.psw
             }
-            RequestLogin(loginParams).then(data => {
+            RequestLogin(loginParams).then(res => {
               this.logining = false
-              let { msg, code, user } = data
-              if (code !== 200) {
+              let {user,ticket,success} = res.data
+              console.log(success)
+              console.log(typeof(success))
+              if ( success === false) {
                 this.$message({
-                  message: msg,
+                  message: res.data.msg,
                   type: 'error'
                 })
               } else {

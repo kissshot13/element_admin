@@ -1,5 +1,5 @@
 import axios from 'axios'
 
-const base = ''
+const base = 'http://localhost:1890/api'
 
-export const RequestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data) }
+export const RequestLogin = params => { return axios.post(`${base}/login`, params).then(res => res) }

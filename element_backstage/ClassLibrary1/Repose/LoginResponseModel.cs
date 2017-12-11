@@ -11,14 +11,14 @@ namespace Message.Repose
         //user 模型
         public User user { get; set; }
 
-        /// <summary>
-        /// 返回user对象
-        /// </summary>
-        /// <param name="user"></param>
-        public LoginResponseModel(User user)
-        {
-            Success = true;
+        public string Ticket { get; set; }
+
+        public LoginResponseModel() { }
+
+        public LoginResponseModel(User user) {
             this.user = user;
+            this.Success = true;
         }
+
     }
 }

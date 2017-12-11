@@ -6,11 +6,12 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Linq;
 using System.Web.SessionState;
 using System.Web.Http.WebHost;
 using System.Web.Routing;
 using System.Web;
+using System.Net.Http.Headers;
+using element_backstage.Areas.HelpPage;
 
 namespace element_backstage
 {
@@ -24,8 +25,21 @@ namespace element_backstage
             var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
             /********************************/
-            //config.Formatters.Remove(config.Formatters.FirstOrDefault(p => p.GetType() == typeof(System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter)));  
 
+
+            //移除application/x-www-form-urlencoded
+            //config.Formatters.Remove(config.Formatters.FirstOrDefault(p => p.GetType() == typeof(System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter)));
+            // 解析 application/x-www-form-urlencoded
+            Type[] types = { typeof(Message.Request.LoginModel) };
+            foreach (Type t in types)
+            {
+                List<string> propExample = new List<string>();
+                foreach (var p in t.GetProperties())
+                {
+                    propExample.Add(p.Name + "=value");
+                }
+                config.SetSampleForType(string.Join("&", propExample), new MediaTypeHeaderValue("application/x-www-form-urlencoded"), t);
+            }
             //WebApi 返回小驼峰式 json 格式，并格式化日期
             ConfigureApi(config);
             // Web API 路由
