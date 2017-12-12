@@ -33,7 +33,6 @@ namespace element_backstage.App_Start
             string strUser = strTicket.Substring(0, index);
             string strPwd = strTicket.Substring(index + 1);
 
-            
         }
     }
 }

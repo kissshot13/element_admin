@@ -9,7 +9,7 @@ using MySql.Data.Entity;
 using System.Data.Entity;
 using System.Runtime.Remoting.Messaging;
 
-namespace DALServer.EFContext
+namespace DALServer
 {
     public class EFContextFactory
     {
